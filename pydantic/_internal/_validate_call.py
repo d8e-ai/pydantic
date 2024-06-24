@@ -37,6 +37,8 @@ class ValidateCallWrapper:
             self.__module__ = function.__module__
 
         namespace = _typing_extra.add_module_globals(function, None)
+        type_params = getattr(schema_type, '__type_params__', ())
+        namespace = {param.__name__: param for param in type_params} | namespace
         config_wrapper = ConfigWrapper(config)
         gen_schema = _generate_schema.GenerateSchema(config_wrapper, namespace)
         schema = gen_schema.clean_schema(gen_schema.generate_schema(function))
